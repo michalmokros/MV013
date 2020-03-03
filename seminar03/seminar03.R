@@ -115,9 +115,71 @@ s_outerBounds_Bu <- function(v) {
   return (Q3 + 3 * (Q3 - Q1))
 }
 
-s_quantileCoeffOfSkewness <- function(v) {
+s_quartileCoeffOfSkewness <- function(v) {
   Q1 <- s_quartile(v, 0.25)
   median <- s_quartile(v, 0.5)
   Q3 <- s_quartile(v, 0.75)
   return (((Q3 - median) - (median - Q1)) / (Q3 - Q1))
 }
+
+#distribution is symmetric or positively/negatively skewed
+isSymmOrSkewed <- function(v) {
+  b1 <- s_coeffOfSkewness(v)
+  if (b1 > 0) {
+    return ("positively skewed")
+  }
+  if (b1 < 0) {
+    return ("negatively skewed")
+  }
+  return ("symmetric")
+}
+
+#distribution is mesokurtic, leptokurtic or platykurtic
+calculateKurtic <- function(v) {
+  b2 <- s_coeffOfKurtosis(v)
+  if (b2 > 0) {
+    return ("leptokurtic")
+  }
+  if (b2 < 0) {
+    return ("platykurtic")
+  }
+  return ("mesokurtic")
+}
+
+#distribution is between quartiles symmetric or positively/negatively skewed
+calculateDistrBetweenQuartiles <- function(v) {
+  b1Q <- s_quantileCoeffOfSkewness(v)
+  if (b1Q > 0) {
+    return ("positively skewed")
+  }
+  if (b1Q < 0) {
+    return ("negatively skewed")
+  }
+  return ("symmetric")
+}
+
+calculateAllMeasures <- function(v) {
+  cat("x_min: ", s_minimum(v))
+  cat("\nx_max: ", s_maximum(v))
+  cat("\narithmetic avg.: ", s_arithmetic_avg(v))
+  cat("\nmedian: ", s_quartile(v, 0.5))
+  cat("\nQ1: ", s_quartile(v, 0.25))
+  cat("\nQ3: ", s_quartile(v, 0.75))
+  cat("\n5-number salary: ", s_fiveNumberSalary(v))
+  cat("\nvariance: ", s_variance(v))
+  cat("\nstandard deviation: ", s_stdDeviation(v))
+  cat("\nvariance of arith. avg.: ", s_varianceOfAvg(v))
+  cat("\nstd. deviation of arith. avg.: ", s_stdDeviationOfAvg(v))
+  cat("\ncoefficient of skewness: ", s_coeffOfSkewness(v))
+  cat("\ncoefficient of kurtosis: ", s_coeffOfKurtosis(v))
+  cat("\nrange: ", s_range(v))
+  cat("\ninterquartile range: ", s_interQRange(v))
+  cat("\ninner bounds -> max: ", s_innerBounds_max(v), ", min: ", s_innerBounds_min(v))
+  cat("\nouter bounds -> Bl: ", s_outerBounds_Bl(v), ", Bu: ", s_outerBounds_Bu(v))
+  cat("\nquartile coefficient of skewness: ", s_quartileCoeffOfSkewness(v))
+  cat("\nDistribution is: ", isSymmOrSkewed(v))
+  cat("\nDistribution is: ", calculateKurtic(v))
+  cat("\nDistribution is between quartiles: ", calculateDistrBetweenQuartiles(v))
+}
+
+
