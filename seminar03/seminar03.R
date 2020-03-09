@@ -37,7 +37,7 @@ s_quartile <- function(v, q) {
   sorted_v <- sort(v)
   border <- q * length(sorted_v)
   if (round(border) != border) {
-    return (sorted_v[border])
+    return (sorted_v[ceiling(border)])
   }
   return ((sorted_v[border] + sorted_v[border + 1]) / 2)
 }
@@ -183,3 +183,10 @@ calculateAllMeasures <- function(v) {
 }
 
 
+body <- read.table('body.txt', header=T)
+missing <- is.na(body)
+sum(missing)
+body <- na.omit(body)
+calculateAllMeasures(as.vector(body$hip.C))
+calculateAllMeasures(body[body$sex == 'f', ]$hip.C)
+calculateAllMeasures(body[body$sex == 'm', ]$hip.C)
